@@ -1,0 +1,315 @@
+---
+title: "Introducing R, RStudio and R Notebook files"
+output: html_notebook
+---
+
+Welcome to your first experience (in this class) with an [R Markdown](http://rmarkdown.rstudio.com) Notebook. 
+
+R is a programming language designed for data analysis and statistics. It can be used for basic statistics and biostatistics such as:
+
+1. calculating means and standard deviations for one or more variables in a data set
+
+2. visualizing data in many formats (bar graphs, box plots, pie charts, scatter plots, etc)
+
+3. devising and "fitting" statistical models from something as simple as a linear regression between a dependent variable (y) and an independent variable (x) to much fancier models that take into account geo-spatial or phylogenetic relationships
+
+R has several big advantages:
+
+1. It is open source, meaning that the people who develop it share it for free and are involved in developing it further based on user experiences
+
+2. It is popular and democratic, partly because it is free and open source
+
+3. It is (relatively) easy.
+
+You may be skeptical of advantage #3, but R is one of the easier programming languages to learn. All of them are daunting at the beginning and easier over time. Moreover, learning one language will help you learn other languages. 
+
+A main reason why R is considered "easy" is because most of the "computer science details" (representing numbers and objects at binary bits and bytes; memory management) are handled behind the scenes. This makes R a little slower than some languages, but that usually is not a big concern unless one is working with whole-planet or whole-genome data sets. We won't do that (yet)!
+
+# Trying out your R Notebook
+
+An R Notebook is a way to write and run code. When you execute code within an R Notebook, the results appear beneath the code. 
+
+Sometimes this is referred to as a "chunk" of code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Wasn't that fun? The reason that worked so well is that RStudio has a "demo" dataset loaded. 
+
+What we'll do next is use some additional code that is pre-written, and then you can try adding some variations on that code. 
+
+In an R Notebook, you add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save an R Notebook, you save two files. One is a file in an R-compatible format and the other is a file compatible with both R and a web browser (an HTML file). 
+
+At the end of today's session (or when you're working later on a Portfolio assignment), you may want to re-name the file to re-save a version that includes added work, which will be of two types:
+(1) new chunks that you've written and honed
+(2) output that you produce when you're happy with your chunk of code and want to show the wonderful output that it generates.
+
+# Introduction to some basic commands, variables and summary statistics
+
+This Notebook should be read and used before "Introduction to getting, testing and plotting data" but definitely follow your work with this Notebook by opening and doing that companion lesson. 
+
+I am grateful to Dan Warren who taught me a lot of R and R pedagogy. Together, Nick Matzke and Dan Warren have developed extensive teaching material via an NSF-supported research center at the University of Tennessee called NIMBIOS, the National Institute for Mathematical and Biological Synthesis. 
+
+In this Notebook, we're going to do some work with variables and some simple summary statistics. A follow up lesson will demonstrate data downloading, more summary statistics, simple statistical tests and statistical models, and some plotting of data. 
+
+After that, we're going to explore two tools in Digital Natural History: BIEN (for plants) and GBIF (for all organisms). Both of those explorations will blend using the browser and also using R and RStudio with R Notebooks that I developed. 
+
+## Variables in R
+
+There are several kinds of variables: numbers, strings/characters, lists, and more.
+
+Below there is a series of chunks that you can run, or you can simply put your cursor on each line and then press *Ctrl+Enter* together and that line will be put into the console and run. 
+
+The first four lines of commands: 
+
+1. Define a variable equal to one. If you run this, nothing will show in output. Why not?                    
+
+x = 1
+
+1a. Try this: add parentheses around the line above
+
+(x = 1)
+
+2. Ask R to tell you the variable's value
+
+x
+
+3. Ask R to add 1 to the variable, and also return the value of x+1
+
+x+1
+
+4. Ask R for the class of the variable x
+
+class(x)
+
+```{r}
+(x = 1)
+x
+x+1
+class(x)
+```
+
+Next, try a variable called a "string" or a character, which is distinct from a numeric variable. 
+
+1. How does this variable look the same, and how different? Try running the line (*Ctrl+Enter*)
+
+(x = "1")
+
+2. Just asking for x looks similar
+
+x
+
+3. What about adding 1 to the variable? Will it be the same?
+
+x+1
+
+4. The error (and the answer to question 3) relates to the class of this variable
+
+class(x)
+
+Here are those commands in a chunk, but I've reversed the order so it checks the class of the variable before trying to use it as a numeric -- otherwise the chunk would "choke" at the error in line 3.
+
+```{r}
+(x = "1")
+x
+class(x)
+x+1
+```
+
+It is possible to convert a character variable to a numeric variable, as needed:
+
+x2 = as.numeric(x)
+
+class(x2)
+
+x2 + 1
+
+```{r}
+x2 = as.numeric(x)
+class(x2)
+x2 + 1
+```
+
+Or, you can go in the reverse direction:
+
+x3 = as.character(x2)
+
+class(x3)
+
+x3 + 1
+
+```{r}
+x3 = as.character(x2)
+class(x3)
+x3 + 1
+```
+
+You can make a list of variables, also known as a vector. Here, it's a list of numbers:
+
+```{r}
+xlist = c(1,2,3,5)
+xlist
+class(xlist)
+```
+
+You can do the same thing with a list of characters:
+
+```{r}
+ylist = c("1", "2", "3", "5")
+ylist
+ylist=c("1","2","3","5")
+ylist
+class(ylist)
+```
+
+And, you can do math with vectors, *if* the elements of the vector are numeric, but not if the elements are characters:
+
+
+```{r}
+xlist + 1
+xlist + xlist
+ylist + 1
+```
+
+But you can do a conversion of a vector that has character elements, making it a vector with numeric elements
+
+```{r}
+as.numeric(ylist) + 1
+zlist = c("a", "b", "c", "q")
+zlist
+as.numeric(zlist)
+```
+
+What about a vector that is a mix of numeric and character elements?
+
+```{r}
+zlist = c("a", 2, 16, "q")
+zlist
+as.numeric(zlist)
+```
+
+These examples are all simple, and even simpler to run in R Notebooks chunks. Let's go back to running line-by-line using *Ctrl+Enter* to move the line into the console window to run. You'll also see the output in the console window, and you'll probably notice a common coding mistake. 
+
+Run just the first line (highlight it and press Ctrl+Enter):
+
+zlist = c("a", 2, 16, "q)
+
+If you want to escape this within the console, hit the escape key on the keyboard (which will also require moving your cursor down to the console window and clicking). 
+
+Now run these next two lines:
+
+zlist
+
+as.numeric(zlist)
+
+## Statistics in R
+
+With numeric lists, can we do statistics?
+
+Yes! Of course! Below you'll see the raw data in xlist, the mean of xlist, the standard deviation of xlist, the variance of xlist (which is the same as the standard deviation squared), the mininum and the maximum, the range (and the difference between the max minus the min) and the "length" or number of numeric values in the list.
+
+Try inserting all these commands into a chunk, and then run the chunk. 
+
+xlist
+
+#### Calculate the average
+mean(xlist)
+
+#### Standard deviation
+sd(xlist)
+
+#### Variance
+var(xlist)
+
+#### Variance is SD^2
+sd(xlist)^2
+
+#### Minimum/maximum and range
+min(xlist)
+max(xlist)
+range(xlist)
+max(xlist) - min(xlist)
+
+#### Length of the list
+length(xlist)
+
+
+### Things you can do with character lists
+zlist = c("a", "b", "c", "q")
+zlist
+
+#### Length still works
+length(zlist)
+
+#### But mean doesn't
+mean(zlist)
+
+Again, try inserting a new chunk and move those commands above into the chunk and run them. 
+
+
+#### Paste is a command that sticks characters together
+paste(zlist)
+paste(zlist, sep="")
+paste(zlist, collapse="")
+paste(zlist, sep="", collapse="")
+paste(zlist, sep="", collapse="_")
+paste(zlist, sep="", collapse="HUNGRY")
+
+
+paste(zlist, zlist, sep="")
+paste(zlist, zlist, sep="_")
+paste(zlist, zlist, sep="_", collapse="")
+
+Insert a new chunk and move the paste commands there to compare the different arguments. For more information, type ``?paste`` into your console.
+
+### Tip: If you'd like help with any function, type this into your console: ``?(function_name_here)``
+
+#### Unique items
+unique(zlist)
+
+zlist2 = c("a", "a", "b", "b")
+
+unique(zlist2)
+
+#### Reverse a list
+rev(zlist)
+
+#### Sort a list alphabetically
+zlist3 = c("z","a", "x")
+sort(zlist3)
+
+
+## Classes:
+#### 1. character (for letters/words/strings)
+#### 2. numeric (for numerical data)
+#### 3. factor (for categorical data, category 1, category 2, etc.)
+#### (many others, but these are basic ones)
+
+#### Some weird things can happen with factors:
+
+#### Make a vector:
+list4 = c("A", "Z", "10", "20")
+
+#### See what happens when you convert:
+(list4_as_numeric = as.numeric(list4))
+
+(list4_as_character = as.character(list4))
+
+(list4_as_factor = as.factor(list4))
+
+(list4_as_factor_then_numeric = as.numeric(as.factor(list4)))
+
+#### WATCH OUT FOR R SNEAKING THINGS INTO "FACTOR" FORMAT!
+
+#### Check the class with "class()"
+class(list4_as_numeric)
+class(list4_as_character)
+class(list4_as_factor)
+class(list4_as_factor_then_numeric)
+
+A follow up lesson will demonstrate data downloading, more summary statistics, simple statistical tests and statistical models, and some plotting of data (see "1.2 Introducing getting, testing and plotting data").

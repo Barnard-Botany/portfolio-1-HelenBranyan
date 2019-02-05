@@ -1,0 +1,76 @@
+---
+title: "BIEN: Sign Up and Play in your Browser and in R Studio"
+output: html_notebook
+---
+
+This assignment will introduce you to BIEN, a free and open-access tool for researching and learning about nature. It stands for Botanical Information and Ecology Network.  
+
+Please visit http://bien.nceas.ucsb.edu/bien/ and read about it under "About BIEN" and then sign up for BIEN.
+
+Most of the assignment will be done in a browser, except for the last few steps. Those can be done inside of R, and it's a good idea to get started with R early. If you need help with R, see the README.md document that came along with the repository you cloned from GitHub. 
+
+# Browser-based Work
+1. Visit [BIEN](http://biendata.org).
+2. Click "Login" and register. It may be necessary for your e-mail to receive a confirmation e-mail. If so, you'll need to go and retrieve it and validate your account.
+3. Save yourself time and frustration later. If you haven't already done so, create a document for yourself now with all course-related usernames & passwords.
+4. Click on BIEN in the lower right, which should bring you to the BIEN 4 information page. Read about the updates, and consider how awesome and novel of a resource this is.
+5. You can try looking up any species using a Latin binomial typed into the search bar. Try sweetgrass, Hierochloe odorata. (Note: BIEN can only retrieve data for species level ID; if you try to search for records of an entire Genus, you will be sad.)
+
+Impressive, right? Now explore your results in three ways:
+
+a. Click on zoom in a few times. Return to your original view with zoom out, or clicking on E will toggle to a view of just the Americas.
+b. Click on Layer Control. Notice that by default you can see a range map and dots for occurrences on one view. You can adjust that to make the range map less visible (highlighting occurrences) or to make the occurrences less visible (highlighting range).
+c. Click on Download Data. You can download trait data and occurrence data and peruse at your leisure. The occurrence data is much more voluminous, and if you look through it you will see that a lot of it is coming from herbaria, sometimes already aggregated through GBIF, another major repository for biodiversity informatics. 
+
+# RStudio and R Work
+Now, open RStudio. You can open a version of this notebook in RStudio and follow instructions, or open a new "untitled" script in the script editor, and re-type and submit commands from there. The first thing to do is to install and load the package "BIEN" which allows you to access data records in BIEN and import them directly into R, where you can also map them (and there are tools for looking at them in a phylogenetic context or to look at trait data, which we will do in Digital Lab 2). You can get more information about the BIEN package for R [online in *Methods in Ecology and Evolution*](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12861).
+
+```{r}
+install.packages("BIEN") # Comment out this command with a # once you have BIEN installed.
+# Then of course you need to open the package from your library of installed packages. Simultaneously, it's smart to open some other packages that may already be installed, which is done below with the library command.
+```
+
+```{r}
+library(BIEN)
+library(ape) # Package for working with phylogenies in R
+library(maps) # Useful for making quick maps of occurrences
+library(sp) # A package for spatial data
+vignette("BIEN")
+```
+
+```{r}
+# Download the data for sweetgrass (Hierochloe odorata).
+Hierochloe_odorata <- BIEN_occurrence_species(species = "Hierochloe odorata")
+```
+
+It looks like nothing happened, but you actually have created a dataframe called Hierochloe_odorata, full of character data and numeric data. Use the commands below. The first allows you to view the so called meta-data (data about the data). The second command looks at the first five entries in the data.
+
+```{r}
+str(Hierochloe_odorata)
+head(Hierochloe_odorata)
+```
+
+As you know from looking at the browser, you can look up a rangemap.
+
+```{r}
+breadfruit_rangemap <- BIEN_ranges_load_species("Artocarpus altilis")
+```
+
+Also, download the occurrence data for breadfruit.
+
+```{r}
+Artocarpus_altilis<-BIEN_occurrence_species(species = "Artocarpus altilis")
+```
+
+```{r}
+# Map the range of breadfruit
+map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,20),ylim=c(-60,80))
+plot(breadfruit_rangemap, col="green", add=T)
+```
+
+```{r}
+# Map the range of breadfruit + occurence records
+map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 80))
+plot(breadfruit_rangemap, col="green", add=T)
+points(cbind(Artocarpus_altilis$longitude, Artocarpus_altilis$latitude), col="blue", pch=20, cex=1)
+```

@@ -1,0 +1,418 @@
+---
+title: "R - Introducing getting, testing and plotting data"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. 
+
+Using this Notebook will be much more understandable if you have worked through the lesson "Introducing R, R Studio and R Notebooks." Also, this Notebook should be read and used in tandem with "R - Introducing variables and summary statistics" 
+
+I am grateful to Dan Warren who taught me a lot of R and R pedagogy. Together, Nick Matzke and Dan Warren have developed extensive teaching material via an NSF-supported research center at the University of Tennessee called NIMBIOS, the National Institute for Mathematical and Biological Synthesis. 
+
+In this Notebook, we're going to do some work getting a classic data set, doing some familiar statistical tests, more summary statistics, and some plotting. 
+
+After you have worked through this and its companion R Notebook, you should be ready to explore two tools in Digital Natural History: BIEN (for plants) and GBIF (for all organisms). Both of those explorations will blend browser-based work and using R and R Studio with R Notebooks. 
+
+
+# GETTING DATA
+
+
+Let's download some data.  Francis Galton, one of the founders of statistics, also promoted the science of eugenics. (For a long and wonderful feminist discussion about eugenics, see the book Ghost Stories for Darwin by Banu Subramanian). Galton was also the cousin of Charles Darwin. Galton invented the term "regression".  These days, "regression" means fitting the best-fit line to a series of x and y data points. But, why is the weird term "regression" used for this? What is regressing?
+
+Let's look at Galton's original dataset: the heights of parents and children.
+
+Use your web browser to [navigate here](http://www.randomservices.org/random/data/Galton.html)
+
+...and save Galton.txt (right-click, save) to your working directory.
+
+After doing this, double-click on Galton.txt and view the file, just to see what's in there.
+
+Come back to R Studio when you're done. 
+
+We will double-check that your data file is in the working directory:
+
+```{r}
+getwd()
+list.files()
+```
+
+Let's store the filename in a variable
+ 
+Note: In your head, eventually:
+ 
+ "wd" will mean "working directory"
+ "fn" will mean "filename"
+
+```{r}
+#wd = "C:/Users/hcallaha/Desktop/Callahan/Data"
+#setwd(wd)
+fn = "Galton.txt"
+heights = read.table(fn, header=TRUE, sep="\t")
+#And, look at "heights"
+heights
+fn <- read.table("Galton.txt", header=TRUE, sep="\t")
+```
+
+898 rows x 6 variables is a lot of data! A great trick in R is to look at just the top rows of a data table
+
+Close the output from the chunk above. 
+
+Then edit the chunk above. 
+
+"Comment out" lines to be sure it won't run as a command. For heights, add a # in front of it
+Also add a line as follows:
+head(heights)
+
+And, while we're at it, let's get three other pieces of information
+
+#### Column names
+names(heights)
+
+#### Dimensions (rows, columns)
+dim(heights)
+
+#### Class (data.frame, matrix, character, numeric, list, etc.)
+class(heights)
+
+Add those three lines into the chunk above, then run the chunk.
+
+Now let's look at some summary statistics:
+
+```{r}
+# Means
+colMeans(heights)
+
+colMeans(heights[,c(-1,-4)])
+
+# Standard deviations
+apply(X=heights[,c(-1,-4)], MARGIN=2, FUN=sd)
+
+# Min & Max
+apply(X=heights[,c(-1,-4)], MARGIN=2, FUN=min)
+apply(X=heights[,c(-1,-4)], MARGIN=2, FUN=max)
+```
+
+You cannot get the chunk to run because the colMeans function will not operate on non-numeric variables, in this case the "Family" variable in column 1 and the "Gender" variable in column 4. 
+
+Comment out that line (line 83) by adding "#" at the front of the line. Then run the chunk again.
+
+The means seem pretty close, but let's do a test.
+
+# TESTING DATA
+
+```{r}
+# Make sure variable columns are numeric
+heights$Family = as.numeric(heights$Family)
+heights$Father = as.numeric(heights$Father)
+heights$Height = as.numeric(heights$Height)
+heights$Kids = as.numeric(heights$Kids)
+
+# Let's add the Midparent column
+heights[,c("Father","Mother")]
+
+# Take the mean of Father and Mother columns, store in column "Midparent"
+heights$Midparent = apply(X=heights[,c("Father","Mother")], MARGIN=1, FUN=mean)
+
+# View the new column
+head(heights)
+
+# Population Mean Between Two Independent Samples:
+# http://www.r-tutor.com/elementary-statistics/inference-about-two-populations/population-mean-between-two-independent-samples
+
+# (change "Child" to "Height")
+ttest_result1 = t.test(x=heights$Midparent, y=heights$Height, paired=FALSE, alternative="two.sided")
+ttest_result1
+```
+
+But wait, this test assumes that the samples from each population 
+are independent. Do you think parent heights and child heights are 
+independent?
+
+Probably not. Actually, these samples are paired, so let's
+check that:
+
+Population Mean Between Two Matched Samples:
+http://www.r-tutor.com/elementary-statistics/inference-about-two-populations/population-mean-between-two-matched-samples
+
+```{r}
+ttest_result2 = t.test(x=heights$Midparent, y=heights$Height, paired=TRUE, alternative="two.sided")
+ttest_result2
+
+# Compare the two:
+ttest_result1
+ttest_result2
+
+# Interestingly, it looks like parents are slightly taller than the children!
+
+# Is this statistically significant?
+
+# But is it a large effect?  Is it *practically* significant?
+```
+
+# PLOTTING DATA
+
+```{r}
+# Let's plot the histograms
+library(lattice)
+hist(heights$Midparent)
+hist(heights$Height)
+```
+
+That's a little hard to compare, due to the different automated scaling of the x-axis.
+
+All the code below is *not* in chunks
+
+You can also run code in an R Notebook by highlighting line(s) and pressing the "Run" icon below, or by pressing Control+Enter. But, the code will show up in the Console window (below). If you want the output to be incorporated into your R Notebook, then put the code into a chunk and then run the chunk. Output will not only appear in this window, but will also be saved into an accompanying 
+notebook html file if you save your work before exiting.
+
+Another option shown below is how to make the plots (which will show up in the Plots window, lower right) and then how to save the plot in PDF format when you're happy with it.
+
+```{r}
+# Let's fix the x-axis to be (5 feet, 7 feet)
+xlims = c(5*12, 7*12)
+
+hist(heights$Midparent, xlim=xlims)
+hist(heights$Height, xlim=xlims)
+
+# Let's fix the y-axis to be (0, 220)
+ylims = c(0, 220)
+hist(heights$Midparent, xlim=xlims, ylim=ylims)
+hist(heights$Height, xlim=xlims, ylim=ylims)
+
+# Let's plot the means and 95% confidence intervals on top
+
+# Midparent values
+hist(heights$Midparent, xlim=xlims, ylim=ylims)
+
+# Plot the mean
+abline(v=mean(heights$Midparent), lty="dashed", lwd=2, col="blue")
+
+# Plot the 95% confidence interval (2.5% - 97.5%)
+CI_025 = mean(heights$Midparent) - 1.96*sd(heights$Midparent)
+CI_975 = mean(heights$Midparent) + 1.96*sd(heights$Midparent)
+abline(v=CI_025, lty="dotted", lwd=2, col="blue")
+abline(v=CI_975, lty="dotted", lwd=2, col="blue")
+
+# Child values
+hist(heights$Height, xlim=xlims, ylim=ylims)
+
+# Plot the mean
+abline(v=mean(heights$Height), lty="dashed", lwd=2, col="blue")
+
+# Plot the 95% confidence interval (2.5% - 97.5%)
+CI_025 = mean(heights$Height) - 1.96*sd(heights$Height)
+CI_975 = mean(heights$Height) + 1.96*sd(heights$Height)
+abline(v=CI_025, lty="dotted", lwd=2, col="blue")
+abline(v=CI_975, lty="dotted", lwd=2, col="blue")
+
+# Let's put the plot into nice PDF format to save it
+
+# Open a PDF for writing
+pdffn = "Galton_height_histograms_v1.pdf"
+pdf(file=pdffn, width=8, height=10)
+
+# Do 2 subplots
+par(mfrow=c(2,1))
+
+# Midparent values
+hist(heights$Midparent, xlim=xlims, ylim=ylims, xlab="height (inches)", ylab="Count", main="Midparent heights")
+
+# Plot the mean
+abline(v=mean(heights$Midparent), lty="dashed", lwd=2, col="blue")
+
+# Plot the 95% confidence interval (2.5% - 97.5%)
+CI_025 = mean(heights$Midparent) - 1.96*sd(heights$Midparent)
+CI_975 = mean(heights$Midparent) + 1.96*sd(heights$Midparent)
+abline(v=CI_025, lty="dotted", lwd=2, col="blue")
+abline(v=CI_975, lty="dotted", lwd=2, col="blue")
+
+# Child values
+hist(heights$Height, xlim=xlims, ylim=ylims, xlab="height (inches)", ylab="Count", main="Child heights")
+
+# Plot the mean
+abline(v=mean(heights$Height), lty="dashed", lwd=2, col="blue")
+
+# Plot the 95% confidence interval (2.5% - 97.5%)
+CI_025 = mean(heights$Height) - 1.96*sd(heights$Height)
+CI_975 = mean(heights$Height) + 1.96*sd(heights$Height)
+abline(v=CI_025, lty="dotted", lwd=2, col="blue")
+abline(v=CI_975, lty="dotted", lwd=2, col="blue")
+
+# Close the PDF writing
+dev.off()
+
+# Write a system command as a text string
+cmdstr = paste("open ", pdffn, sep="")
+cmdstr
+
+# Send the command to the computer system's Terminal/Command Line
+system(cmdstr)
+
+# The PDF should hopefully pop up, e.g. if you have the free Adobe Reader
+```
+
+The difference in means is very small, even though it appears to be 
+statistically significant. 
+
+### This is a VERY IMPORTANT lesson: "statistically significant" DOES NOT ALWAYS MEAN "practically "significant","interesting", "scientifically relevant", etc.
+ 
+The difference may have to do with:
+
+* Galton's 'method' of dealing with the fact that male and female children have different average heights -- he multiplied the female heights by 1.08!
+
+* Different nutrition between the generations
+
+* Maybe the adult children weren't quite all fully grown
+
+* Chance rejection of the null
+
+Who knows?
+
+You may have noticed that the standard deviations look to be 
+a lot different. Can we test for this?
+
+```{r}
+# Yes! The null hypothesis is that the ratio of the variances is 1:
+
+Ftest_result = var.test(x=heights$Midparent, y=heights$Height, ratio=1, alternative="two.sided")
+Ftest_result
+```
+
+We get extremely significant rejection of the null. What is the likely cause of the lower variance in the midparent data?
+
+
+For the complex story of Galton's original data, see:
+[http://www.medicine.mcgill.ca/epidemiology/hanley/galton/](http://www.medicine.mcgill.ca/epidemiology/hanley/galton/)
+
+#### [James A. Hanley (2004). 'Transmuting' women into men: Galton's family data on human stature. The American Statistician, 58(3) 237-243.](http://www.medicine.mcgill.ca/epidemiology/hanley/reprints/hanley_article_galton_data.pdf)
+ 
+BTW, Galton was both a genius, and promoted some deeply flawed ideas
+like [eugenics](http://isteve.blogspot.com/2013/01/regression-toward-mean-and-francis.html).
+
+
+We noted before that child and parent heights might not be independent. Let's test this!
+
+QUESTION: is there a relationship?
+
+Start by plotting the data:
+
+```{r}
+plot(x=heights$Midparent, y=heights$Height)
+
+# It looks like there is a positive relationship: taller parents have taller children.
+
+# However, it's a little bit hard to tell for sure, because Galton's data is only measured to the half-inch, so many dots are plotting on top of each other.  We can fix this by "jittering" the data:
+
+# Plot the data, with a little jitter
+plot(x=jitter(heights$Midparent), y=jitter(heights$Height))
+```
+
+It looks like there's a positive relationship, which makes sense.  Can we confirm this with a statistical test?
+
+```{r}
+# Let's build a linear model (lm)
+lm_result = lm(formula=Height~Midparent, data=heights)
+lm_result
+
+# This just has the coefficients; this doesn't tell us much.
+
+# What's in the linear model? A list of items:
+names(lm_result)
+
+# See the statistical results
+summary(lm_result)
+
+# Analysis of variance (ANOVA)
+anova(lm_result)
+```
+
+You can get some standard diagnostic regression plots with:
+
+```{r}
+# Let's plot the regression line on top of the points
+intercept_value = lm_result$coefficients["(Intercept)"]
+slope_value = lm_result$coefficients["Midparent"]
+
+
+# Plot the points
+plot(x=jitter(heights$Midparent), y=jitter(heights$Height))
+
+# Add the line
+
+abline(a=intercept_value, b=slope_value, col="blue", lwd=2, lty="dashed")
+
+# It's a little hard to tell if the slope is 1:1 or not, because the x-axis and y-axis aren't the same. Let's fix this.
+
+# Plot the points
+xlims = c(5*12, 6.5*12)
+ylims = c(5*12, 6.5*12)
+plot(x=jitter(heights$Midparent, factor=3), y=jitter(heights$Height, factor=3), xlab="Midparent height", ylab="Child height", xlim=xlims, ylim=ylims)
+title("Galton's height data")
+
+# Add the regression line
+abline(a=intercept_value, b=slope_value, col="blue", lwd=2, lty="dashed")
+
+# Add the 1:1 line
+abline(a=0, b=1, col="darkgreen", lwd=2, lty="dashed")
+```
+
+Is the slope statistically different from 1:1?
+
+```{r}
+# We can test this by subtracting a 1:1 relationship from the data, and seeing if the result has a slope different from 0
+child_minus_1to1 = heights$Height - (1/1*heights$Midparent)
+heights2 = heights
+heights2 = cbind(heights2, child_minus_1to1)
+```
+
+
+
+```{r}
+# Let's build a linear model (lm)
+lm_result2 = lm(formula=child_minus_1to1~Midparent, data=heights2)
+lm_result2
+
+# This just has the coefficients; this doesn't tell us much
+# What's in the linear model? A list of items:
+names(lm_result2)
+
+# See the statistical results
+summary(lm_result2)
+
+# Analysis of variance (ANOVA)
+anova(lm_result2)
+```
+
+
+
+```{r}
+# You can get some standard diagnostic regression plots with:
+plot(lm_result2)
+
+# Let's plot the regression line on top of the points
+intercept_value = lm_result2$coefficients["(Intercept)"]
+slope_value = lm_result2$coefficients["Midparent"]
+```
+
+
+```{r}
+# Plot the points
+
+plot(x=jitter(heights2$Midparent), y=jitter(heights2$child_minus_1to1), xlim=xlims, xlab="Midparent heights", ylab="Child heights minus 1:1 line", main="Relationship after subtracting 1:1 line")
+
+# Add the regression line
+abline(a=intercept_value, b=slope_value, col="blue", lwd=2, lty="dashed")
+
+# Add the expected line if the relationship was 1:1
+abline(a=0, b=0, col="darkgreen", lwd=2, lty="dashed")
+```
+
+Yep, the relationship is definitely different than 1:1
+
+Why is the relationship between parent height and offspring height LESS THAN 1:1???
+
+Why do tall parents tend to produce offspring shorter than themselves? Why does height seem to "regress"? What about the children of short parents?  Do they 'regress'?
+ 
+What are possible statistical consequences/hazards of this?
+
+### Why is all of this rarely explained when regression is taught?
