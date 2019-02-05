@@ -312,4 +312,4 @@ class(list4_as_character)
 class(list4_as_factor)
 class(list4_as_factor_then_numeric)
 
-A follow up lesson will demonstrate data downloading, more summary statistics, simple statistical tests and statistical models, and some plotting of data (see "1.2 Introducing getting, testing and plotting data").
+A follow up lesson will demonstrate data downloading, more summary statistics, simple statistical tests and statistical models like one-way ANOVA and t-tests, and some plotting of data (see "1.2 Introducing getting, testing and plotting data").
