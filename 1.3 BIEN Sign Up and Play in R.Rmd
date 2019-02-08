@@ -53,24 +53,24 @@ head(Hierochloe_odorata)
 As you know from looking at the browser, you can look up a rangemap.
 
 ```{r}
-breadfruit_rangemap <- BIEN_ranges_load_species("Artocarpus altilis")
+sweetgrass_rangemap <- BIEN_ranges_load_species("Hierochloe_odorata")
 ```
 
 Also, download the occurrence data for breadfruit.
 
 ```{r}
-Artocarpus_altilis<-BIEN_occurrence_species(species = "Artocarpus altilis")
+sweetgrass<-BIEN_occurrence_species(species = "Hierochloe_odorata")
 ```
 
 ```{r}
 # Map the range of breadfruit
 map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,20),ylim=c(-60,80))
-plot(breadfruit_rangemap, col="green", add=T)
+plot(sweetgrass_rangemap, col="green", add=T)
 ```
 
 ```{r}
-# Map the range of breadfruit + occurence records
+# Map the range of sweetgrass + occurence records
 map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 80))
-plot(breadfruit_rangemap, col="green", add=T)
-points(cbind(Artocarpus_altilis$longitude, Artocarpus_altilis$latitude), col="blue", pch=20, cex=1)
+plot(sweetgrass_rangemap, col="green", add=T)
+points(cbind(Hierochloe_odorata$longitude, Hierochloe_odorata$latitude), col="blue", pch=20, cex=1)
 ```

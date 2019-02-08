@@ -3,7 +3,7 @@ title: "Introducing R, RStudio and R Notebook files"
 output: html_notebook
 ---
 
-Welcome to your first experience (in this class) with an [R Markdown](http://rmarkdown.rstudio.com) Notebook. 
+Welcome to your first experience (in this class) with an [R Markdown](http://rmarkdown.rstudio.com)  and R Notebooks. 
 
 R is a programming language designed for data analysis and statistics. It can be used for basic statistics and biostatistics such as:
 
@@ -167,7 +167,7 @@ ylist
 class(ylist)
 ```
 
-And, you can do math with vectors, *if* the elements of the vector are numeric, but not if the elements are characters:
+And, you can do math with vectors, *if* the elements of the vectors are all numeric, but not if the elements are characters:
 
 
 ```{r}
@@ -193,23 +193,30 @@ zlist
 as.numeric(zlist)
 ```
 
-These examples are all simple, and even simpler to run in R Notebooks chunks. Let's go back to running line-by-line using *Ctrl+Enter* to move the line into the console window to run. You'll also see the output in the console window, and you'll probably notice a common coding mistake. 
+These examples are all simple, and even simpler to run in R Notebooks chunks. Let's go back to running line-by-line. 
+
+If you use your cursor to highlight the line below, you can use  *Ctrl+Enter* to move the line into the console window (see it below; click on it to expand it if need be.) It will run in that console window, where you will see see the output. 
+
+qlist = c("a", 2, 16, "q")
+
+What is happening, and why?
+
+Possibly you'll notice a common coding mistake. Fix it and then run the first line again.
 
 Run just the first line (highlight it and press Ctrl+Enter):
-
-zlist = c("a", 2, 16, "q)
 
 If you want to escape this within the console, hit the escape key on the keyboard (which will also require moving your cursor down to the console window and clicking). 
 
 Now run these next two lines:
 
-zlist
+qlist
+as.numeric(qlist)
 
-as.numeric(zlist)
+What's happening here? 
 
 ## Statistics in R
 
-With numeric lists, can we do statistics?
+Moving right along, assuming we can make proper numeric lists, can we do statistics?
 
 Yes! Of course! Below you'll see the raw data in xlist, the mean of xlist, the standard deviation of xlist, the variance of xlist (which is the same as the standard deviation squared), the mininum and the maximum, the range (and the difference between the max minus the min) and the "length" or number of numeric values in the list.
 
@@ -238,6 +245,9 @@ max(xlist) - min(xlist)
 #### Length of the list
 length(xlist)
 
+
+
+If you're working with character lists, you cannot do statistics because the variables are non-numeric. But, they may be useful as grouping variables or in other ways. And character variables can be modified. 
 
 ### Things you can do with character lists
 zlist = c("a", "b", "c", "q")
@@ -268,8 +278,11 @@ paste(zlist, zlist, sep="_", collapse="")
 Insert a new chunk and move the paste commands there to compare the different arguments. For more information, type ``?paste`` into your console.
 
 ### Tip: If you'd like help with any function, type this into your console: ``?(function_name_here)``
+### Or  go to the lower right-hand window & click on the help tab and type the function in the search window
 
 #### Unique items
+#### This is something that will be important when we start working with lists of species names. 
+
 unique(zlist)
 
 zlist2 = c("a", "a", "b", "b")
@@ -277,6 +290,7 @@ zlist2 = c("a", "a", "b", "b")
 unique(zlist2)
 
 #### Reverse a list
+
 rev(zlist)
 
 #### Sort a list alphabetically

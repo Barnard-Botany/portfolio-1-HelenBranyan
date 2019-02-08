@@ -88,8 +88,9 @@ breadfruit_traits
 
 ```{r}
 Breadfruit_DBH <- BIEN_trait_traitbygenus(trait = "diameter at breast height (1.3 m)", genus = "Artocarpus")
+head(Breadfruit_DBH)
+tail(Breadfruit_DBH)
 str(Breadfruit_DBH)
-Breadfruit_DBH
 ```
 
 ```{r}
@@ -137,24 +138,100 @@ WPH = as.numeric(Breadfruit_WPH_small$trait_value)
 class(WPH)
 ```
 
-```{r}
-library(lattice)
-head(Breadfruit_WPH_small)
-hist(WPH)
-boxplot(WPH~scrubbed_species_binomial, data=Breadfruit_WPH_small)
-```
+
 
 ```{r}
 mean(DBH, data=Breadfruit_DBH_small)
 mean(WPH, data=Breadfruit_WPH_small)
 ```
 
+
+Downloading for just one species: 
+
+```{r}
+Anitidus_DBH <- BIEN_trait_traitbyspecies(trait = "diameter at breast height (1.3 m)", species = "Artocarpus nitidus")
+head(Anitidus_DBH)
+tail(Anitidus_DBH)
+str(Anitidus_DBH)
+```
+
+
+```{r}
+Anitidus_DBH_small = Anitidus_DBH[c(1:5)]
+Anitidus_DBH_small
+Anitidus_DBH_small = as.data.frame(Anitidus_DBH_small)
+class(Anitidus_DBH_small)
+head(Anitidus_DBH_small)
+class(Anitidus_DBH_small$trait_value)
+DBHa = as.numeric(Anitidus_DBH_small$trait_value)
+class(DBHa)
+```
+
+
+```{r}
+boxplot(DBHn)
+hist(DBHn)
+```
+
+
+Another species: 
+
+
+```{r}
+Ahirsutus_DBH <- BIEN_trait_traitbyspecies(trait = "diameter at breast height (1.3 m)", species = "Artocarpus hirsutus")
+head(Ahirsutus_DBH)
+tail(Ahirsutus_DBH)
+str(Ahirsutus_DBH)
+```
+
+
+```{r}
+Ahirsutus_DBH_small = Ahirsutus_DBH[c(1:5)]
+Ahirsutus_DBH_small
+Ahirsutus_DBH_small = as.data.frame(Ahirsutus_DBH_small)
+class(Ahirsutus_DBH_small)
+head(Ahirsutus_DBH_small)
+DBHh = as.numeric(Ahirsutus_DBH_small$trait_value)
+class(Ahirsutus_DBH_small$trait_value)
+class(DBHh)
+```
+
+
+
+```{r}
+library(dplyr)
+Artocarpus2<-rbind(Anitidus_DBH_small, Ahirsutus_DBH_small)
+head(Artocarpus2)
+tail(Artocarpus2)
+class(Artocarpus2$trait_value)
+DBHboth = as.numeric(Artocarpus2$trait_value)
+class(DBHboth)
+```
+
+```{r}
+boxplot(DBHboth)
+hist(DBHboth)
+```
+
+```{r}
+ArtocarpusBoth<-cbind(Artocarpus2, DBHboth)
+head(ArtocarpusBoth)
+tail(ArtocarpusBoth)
+```
+
+
+
+```{r}
+boxplot(DBHboth~scrubbed_species_binomial, data=ArtocarpusBoth)
+```
+
+
 Below there is another package being installed into the library and then loaded from the library to be active in the R software. This allows summarizing within species (rather than the whole genus), generating standard functions such as means and standard deviations (sd). The online resource Quick-R can be helpful if you want a bit more support in generating summary statistics, especially within sub-groups. 
 
 https://www.statmethods.net/stats/descriptives.html
 
 ```{r}
-#install(doBy)
+install.packages("doBy")
 library(doBy)
 summaryBy(DBH~scrubbed_species_binomial, data=Breadfruit_DBH_small, FUN=c(mean, sd))
 summaryBy(WPH~scrubbed_species_binomial, data=Breadfruit_WPH_small, FUN=c(mean, sd))
@@ -202,10 +279,49 @@ ttest_result1
 
 # This will prepare you for Digital Lab 2
 
+Another feature of BIEN is that it can be limited to specified spatial places. 
+
+One built-in feature is to obtain data for different political jurisdictions such as nations, states or provinces within nations, and counties or parishs with states/provinces.
+
+The line in the chunk of code below can be used to obtain  a comprehensive list of all those political jurisdictions which is useful to figure out how to ask for, say "United States" rather than "USA" and so forth. 
+
 ```{r}
-#BIEN_occurrence_country()
-bronx <- BIEN_occurrence_county(country="United States", state="New York", county = "Bronx", native.status=TRUE)
-bronx
+BIEN_metadata_list_political_names()
 ```
 
-# Hilary add stuff here!
+
+
+
+```{r}
+Cuba<-BIEN_list_country(country = "Cuba")
+head(Cuba)
+tail(Cuba)
+#Panama<-BIEN_list_country(country = "Panama")
+#head(Panama)
+#tail(Panama)
+```
+
+
+```{r}
+Delaware <- BIEN_occurrence_state(country="United States", state="Delaware")
+head(Delaware)
+tail(Delaware)
+```
+
+The rest of the code shows how to get county lists.  
+
+```{r}
+#bronx <- BIEN_occurrence_county(country="United States", state="New York", county = "Bronx", native.status=TRUE)
+#head(bronx)
+#tail(bronx)
+OrangeCal_list<-BIEN_list_county(country = "United States", state="California", county="Orange")
+head(OrangeCal_list)
+tail(OrangeCal_list)
+```
+
+
+####To complete this portfolio:
+
+Before our next digital lab on Feb 22, choose one of the exercises above and complete it. 
+
+Also use this last coding exercise to obtain species lists for three counties in a state in the USA outside of New York. For example, you could start with the county where you attended high school. Or, you could use a county where you have vacationed in the past, or where you would like to visit. Also download data for two adjacent counties. 

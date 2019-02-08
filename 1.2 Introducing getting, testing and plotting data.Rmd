@@ -3,13 +3,11 @@ title: "R - Introducing getting, testing and plotting data"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. 
+This is an R Notebook using [R Markdown](http://rmarkdown.rstudio.com). 
 
-Using this Notebook will be much more understandable if you have worked through the lesson "Introducing R, R Studio and R Notebooks." Also, this Notebook should be read and used in tandem with "R - Introducing variables and summary statistics" 
+For novices, using this Notebook will be much more understandable if you have worked through the lesson "Introducing R, R Studio and R Notebooks." Also, this Notebook should be read and used in tandem with "R - Introducing variables and summary statistics" 
 
-I am grateful to Dan Warren who taught me a lot of R and R pedagogy. Together, Nick Matzke and Dan Warren have developed extensive teaching material via an NSF-supported research center at the University of Tennessee called NIMBIOS, the National Institute for Mathematical and Biological Synthesis. 
-
-In this Notebook, we're going to do some work getting a classic data set, doing some familiar statistical tests, more summary statistics, and some plotting. 
+In this Notebook, we're going to do some work getting a classic data set, doing some familiar statistical tests, more summary statistics, and some plotting. This lesson is also reliant on resources at NIMBioS (www.nimbios.org)
 
 After you have worked through this and its companion R Notebook, you should be ready to explore two tools in Digital Natural History: BIEN (for plants) and GBIF (for all organisms). Both of those explorations will blend browser-based work and using R and R Studio with R Notebooks. 
 
@@ -29,7 +27,9 @@ After doing this, double-click on Galton.txt and view the file, just to see what
 
 Come back to R Studio when you're done. 
 
-We will double-check that your data file is in the working directory:
+We will double-check that your data file is in the working directory. 
+
+(We cheated ... it's already there from your GitHub cloning!)
 
 ```{r}
 getwd()
@@ -80,7 +80,7 @@ Now let's look at some summary statistics:
 
 ```{r}
 # Means
-colMeans(heights)
+#colMeans(heights)
 
 colMeans(heights[,c(-1,-4)])
 
@@ -94,9 +94,13 @@ apply(X=heights[,c(-1,-4)], MARGIN=2, FUN=max)
 
 You cannot get the chunk to run because the colMeans function will not operate on non-numeric variables, in this case the "Family" variable in column 1 and the "Gender" variable in column 4. 
 
-Comment out that line (line 83) by adding "#" at the front of the line. Then run the chunk again.
+Comment out that very first line (line 83) by adding "#" at the front of the line. Then remove the "#"  from line 85. 
 
-The means seem pretty close, but let's do a test.
+What line 85 is asking for is to use the same dataframe, but to skip the first column and the fourth column.
+
+Then run the chunk again.
+
+Here, "Height" refers to the kids' heights. 
 
 # TESTING DATA
 
@@ -110,7 +114,7 @@ heights$Kids = as.numeric(heights$Kids)
 # Let's add the Midparent column
 heights[,c("Father","Mother")]
 
-# Take the mean of Father and Mother columns, store in column "Midparent"
+# Take the mean of Father and Mother columns, then store it in a new column in the dataframe called "Midparent"
 heights$Midparent = apply(X=heights[,c("Father","Mother")], MARGIN=1, FUN=mean)
 
 # View the new column
