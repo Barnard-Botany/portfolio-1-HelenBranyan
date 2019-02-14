@@ -169,8 +169,8 @@ class(DBHa)
 
 
 ```{r}
-boxplot(DBHn)
-hist(DBHn)
+boxplot(DBH)
+hist(DBH)
 ```
 
 
