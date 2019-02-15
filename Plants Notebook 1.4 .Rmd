@@ -468,3 +468,117 @@ points(cbind(Castanea_dentata_full$longitude, Castanea_dentata_full$latitude), c
 # Plot the points from the default query in blue
 points(cbind(Castanea_dentata$longitude, Castanea_dentata$latitude), col="blue", pch=20, cex=1) 
 ```
+```{r}
+BIEN_trait_list()
+```
+```{r}
+# Create data frame of chestnut traits
+chestnut_traits <- BIEN_trait_genus(genus = "Castanea")
+str(chestnut_traits)
+chestnut_traits
+```
+```{r}
+Chestnut_DBH <- BIEN_trait_traitbygenus(trait = "diameter at breast height (1.3 m)", genus = "Castanea")
+head(Chestnut_DBH)
+tail(Chestnut_DBH)
+str(Chestnut_DBH)
+```
+```{r}
+# List variable names from Chestnut_DBH data frame
+names(Chestnut_DBH)
+```
+```{r}
+Chestnut_DBH_small = Chestnut_DBH[c(1:5)]
+Chestnut_DBH_small
+Chestnut_DBH_small = as.data.frame(Chestnut_DBH_small)
+class(Chestnut_DBH_small)
+head(Chestnut_DBH_small)
+class(Chestnut_DBH_small$trait_value)
+DBH = as.numeric(Chestnut_DBH_small$trait_value)
+class(DBH)
+```
+```{r}
+library(lattice)
+head(Chestnut_DBH_small)
+boxplot(DBH~scrubbed_species_binomial, data=Chestnut_DBH_small)
+```
+```{r}
+Chestnut_WPH <- BIEN_trait_traitbygenus(trait = "whole plant height", genus = "Castanea")
+str(Chestnut_WPH)
+Chestnut_WPH
+```
+```{r}
+names(Chestnut_WPH)
+```
+```{r}
+Chestnut_WPH_small = Chestnut_WPH[c(1:5)]
+Chestnut_WPH_small
+Chestnut_WPH_small = as.data.frame(Chestnut_WPH_small)
+class(Chestnut_WPH_small)
+head(Chestnut_WPH_small)
+class(Chestnut_WPH_small$trait_value)
+WPH = as.numeric(Chestnut_WPH_small$trait_value)
+class(WPH)
+```
+```{r}
+mean(DBH, data=Chestnut_DBH_small)
+mean(WPH, data=Chestnut_WPH_small)
+```
+```{r}
+Castanea_DBH <- BIEN_trait_traitbyspecies(trait = "diameter at breast height (1.3 m)", species = "Castanea dentata")
+head(Castanea_DBH)
+tail(Castanea_DBH)
+str(Castanea_DBH)
+```
+```{r}
+Castanea_DBH_small = Castanea_DBH[c(1:5)]
+Castanea_DBH_small
+Castanea_DBH_small = as.data.frame(Castanea_DBH_small)
+class(Castanea_DBH_small)
+head(Castanea_DBH_small)
+class(Castanea_DBH_small$trait_value)
+DBHa = as.numeric(Castanea_DBH_small$trait_value)
+class(DBHa)
+```
+```{r}
+boxplot(DBH)
+hist(DBH)
+```
+```{r}
+Castanea_DBH <- BIEN_trait_traitbyspecies(trait = "diameter at breast height (1.3 m)", species = "Castanea pumila")
+head(Castanea_DBH)
+tail(Castanea_DBH)
+str(Castanea_DBH)
+```
+```{r}
+Castanea_DBH_small = Castanea_DBH[c(1:5)]
+Castanea_DBH_small
+Castanea_DBH_small = as.data.frame(Castanea_DBH_small)
+class(Castanea_DBH_small)
+head(Castanea_DBH_small)
+DBHh = as.numeric(Castanea_DBH_small$trait_value)
+class(Castanea_DBH_small$trait_value)
+class(DBHh)
+```
+```{r}
+library(dplyr)
+Chestnut2<-rbind(Castanea_DBH_small, Castanea_DBH_small)
+head(Chestnut2)
+tail(Chestnut2)
+class(Chestnut2$trait_value)
+DBHboth = as.numeric(Chestnut2$trait_value)
+class(DBHboth)
+```
+```{r}
+boxplot(DBHboth)
+hist(DBHboth)
+```
+```{r}
+ChestnutBoth<-cbind(Chestnut2, DBHboth)
+head(ChestnutBoth)
+tail(ChestnutBoth)
+```
+```{r}
+boxplot(DBHboth~scrubbed_species_binomial, data=ChestnutBoth)
+```
+
