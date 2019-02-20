@@ -581,4 +581,122 @@ tail(ChestnutBoth)
 ```{r}
 boxplot(DBHboth~scrubbed_species_binomial, data=ChestnutBoth)
 ```
+Also not sure why this boxplot didn't work 
+```{r}
+# Population Mean Between Two Independent Samples
+# http://www.r-tutor.com/elementary-statistics/inference-about-two-populations/population-mean-between-two-independent-samples
+ttest_result1 = t.test(x=Chestnut_DBH_small$scrubbed_species_binomial, y=Chestnut_WPH_small$trait_value, paired=FALSE, alternative="two.sided")
+ttest_result1
+```
+Dunno what this message means? 
+```{r}
+# Download the data for a focal species.
+Aloe_vera <- BIEN_occurrence_species(species = "Aloe vera")
+```
+```{r}
+str(Aloe_vera)
+head(Aloe_vera)
+tail(Aloe_vera)
+```
+```{r}
+# Download the data for a focal species.
+Hamamelis_virginiana <- BIEN_occurrence_species(species = "Hamamelis virginiana")
+```
+```{r}
+str(Hamamelis_virginiana)
+head(Hamamelis_virginiana)
+tail(Hamamelis_virginiana)
+```
+```{r}
+witchhazel_rangemap <- BIEN_ranges_load_species("Hamamelis virginiana")
+```
+```{r}
+# Map the range of witchhazel
+map('world', fill=T, col="grey", bg = "light blue", xlim=c(-180,20),ylim=c(-60,80))
+plot(witchhazel_rangemap, col="green", add=T)
+```
+```{r}
+# Map the range of witchhazel + occurence records
+map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 80))
+plot(witchhazel_rangemap, col="green", add=T)
+points(cbind(Hamamelis_virginiana$longitude, Hamamelis_virginiana$latitude), col="blue", pch=20, cex=1)
+```
+```{r}
+Hamamelis_virginiana_full <- BIEN_occurrence_species(species = "Hamamelis virginiana",cultivated = T,only.new.world = F,all.taxonomy = T,native.status = T,observation.type = T,political.boundaries = T)
 
+str(Hamamelis_virginiana_full)
+```
+```{r}
+map('world', fill=T , col="grey", bg="light blue")
+
+#Plot the points from the full query in red
+points(cbind(Hamamelis_virginiana_full$longitude, Hamamelis_virginiana_full$latitude), col="red", pch=20, cex=1)
+
+# Plot the points from the default query in blue
+points(cbind(Hamamelis_virginiana$longitude, Hamamelis_virginiana$latitude), col="blue", pch=20, cex=1) 
+```
+```{r}
+Cdentata_DBH <- BIEN_trait_traitbyspecies(trait = "diameter at breast height (1.3 m)", species = "Castanea dentata")
+head(Cdentata_DBH)
+tail(Cdentata_DBH)
+str(Cdentata_DBH)
+```
+```{r}
+Cdentata_DBH_small = Cdentata_DBH[c(1:5)]
+Cdentata_DBH_small
+Cdentata_DBH_small = as.data.frame(Cdentata_DBH_small)
+class(Cdentata_DBH_small)
+head(Cdentata_DBH_small)
+class(Cdentata_DBH_small$trait_value)
+DBHa = as.numeric(Cdentata_DBH_small$trait_value)
+class(DBHa)
+```
+```{r}
+boxplot(DBH)
+hist(DBH)
+```
+
+```{r}
+Cpumila_DBH <- BIEN_trait_traitbyspecies(trait = "diameter at breast height (1.3 m)", species = "Castanea pumila")
+head(Cpumila_DBH)
+tail(Cpumila_DBH)
+str(Cpumila_DBH)
+```
+```{r}
+Cpumila_DBH_small = Cpumila_DBH[c(1:5)]
+Cpumila_DBH_small
+Cpumila_DBH_small = as.data.frame(Cpumila_DBH_small)
+class(Cpumila_DBH_small)
+head(Cpumila_DBH_small)
+DBHh = as.numeric(Cpumila_DBH_small$trait_value)
+class(Cpumila_DBH_small$trait_value)
+class(DBHh)
+```
+```{r}
+library(dplyr)
+Chestnut2<-rbind(Cdentata_DBH_small, Cpumila_DBH_small)
+head(Chestnut2)
+tail(Chestnut2)
+class(Chestnut2$trait_value)
+DBHboth = as.numeric(Chestnut2$trait_value)
+class(DBHboth)
+```
+```{r}
+boxplot(DBHboth)
+hist(DBHboth)
+```
+```{r}
+ChestnutBoth<-cbind(Chestnut2, DBHboth)
+head(ChestnutBoth)
+tail(ChestnutBoth)
+```
+```{r}
+boxplot(DBHboth~scrubbed_species_binomial, data=ChestnutBoth)
+```
+AHA! success 
+
+x <- Cdentata_DBH_small
+y <- Cpumila_DBH_small
+plot(x, y, main = "ChestnutBoth",
+     xlab = "Cdentata", ylab = "Cpumila",
+     pch = 19, frame = FALSE)
