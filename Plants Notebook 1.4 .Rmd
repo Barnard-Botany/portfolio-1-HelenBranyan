@@ -693,10 +693,24 @@ tail(ChestnutBoth)
 ```{r}
 boxplot(DBHboth~scrubbed_species_binomial, data=ChestnutBoth)
 ```
-AHA! success 
+# AHA! success 
 
-x <- Cdentata_DBH_small
-y <- Cpumila_DBH_small
-plot(x, y, main = "ChestnutBoth",
-     xlab = "Cdentata", ylab = "Cpumila",
-     pch = 19, frame = FALSE)
+
+ttest_result1 = t.test(x=Chestnut_WPH_small$scrubbed_species_binomial, y=Chestnut_WPH_small$trait_value, paired=FALSE, alternative="two.sided")
+
+Cannot get ttest to run, keeps saying: Error in if (stderr < 10 * .Machine$double.eps * max(abs(mx), abs(my))) stop("data are essentially constant") : 
+  missing value where TRUE/FALSE needed
+  
+  ???
+  
+t.test(DBHboth~scrubbed_species_binomial, data=ChestnutBoth)
+data:  DBHboth by scrubbed_species_binomial
+t = -2.2358, df = 1092.9, p-value = 0.02557
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.23673612 -0.08060999
+sample estimates:
+mean in group Castanea dentata  mean in group Castanea pumila 
+                      5.583315                       6.241988 
+
+#AHAAHAHA success again! t=-2.24 so the difference is NOT significant 
