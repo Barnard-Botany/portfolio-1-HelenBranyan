@@ -714,3 +714,13 @@ mean in group Castanea dentata  mean in group Castanea pumila
                       5.583315                       6.241988 
 
 #AHAAHAHA success again! t=-2.24 so the difference is NOT significant 
+
+plot(Cdentata_DBH_small, Cpumila_DBH_small, main="scatterplot", data=ChestnutBoth, las=1, xlim=c(0,40), ylim=c(0,40))
+
+plot(Cdentata_DBH_small, Cpumila_DBH_small, main="scatterplot", las=1, xlim=c(0,40), ylim=c(0,40))
+
+plot(x=Cdentata_DBH_small, y=Cpumila_DBH_small, xlab=Castanea dentata, ylab=Castnea pumila, log=1)
+
+plot(x=Cdentata_DBH_small, y=Cpumila_DBH_small)
+#cannot get scatterplot or graph to work
+
