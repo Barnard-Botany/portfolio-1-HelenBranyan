@@ -581,7 +581,9 @@ tail(ChestnutBoth)
 ```{r}
 boxplot(DBHboth~scrubbed_species_binomial, data=ChestnutBoth)
 ```
-Also not sure why this boxplot didn't work 
+Also not sure why this boxplot didn't work
+# Because you wrote over your original "Castanea_DBH" variable, replacing dentata DBH with pumila DBH (see lines 528 and 548). So, when you created "Chestnut2" with two copies of Castanea_DBH_small (line 565), you were essentially giving "Chestnut2" two copies of the pumila data. Remember to create unique names for your variables that hold data from different species.
+
 ```{r}
 # Population Mean Between Two Independent Samples
 # http://www.r-tutor.com/elementary-statistics/inference-about-two-populations/population-mean-between-two-independent-samples
@@ -695,6 +697,7 @@ boxplot(DBHboth~scrubbed_species_binomial, data=ChestnutBoth)
 ```
 # AHA! success 
 
+# Nice! Ignore my comment above (line 585). I wrote it before seeing your work through this again. I could just go and delete it, but it's worth remembering why it didn't work for you the first time.
 
 ttest_result1 = t.test(x=Chestnut_WPH_small$scrubbed_species_binomial, y=Chestnut_WPH_small$trait_value, paired=FALSE, alternative="two.sided")
 
@@ -713,7 +716,10 @@ sample estimates:
 mean in group Castanea dentata  mean in group Castanea pumila 
                       5.583315                       6.241988 
 
-#AHAAHAHA success again! t=-2.24 so the difference is NOT significant 
+#AHAAHAHA success again! t=-2.24 so the difference is NOT significant
+
+# False. Since the t-value is far away from 0, and the p-value is < 0.05, the difference IS significant, and you can reject the null hypothesis (which was that the means of the DBH of these two species were not different.)
+
 
 plot(Cdentata_DBH_small, Cpumila_DBH_small, main="scatterplot", data=ChestnutBoth, las=1, xlim=c(0,40), ylim=c(0,40))
 
@@ -722,5 +728,7 @@ plot(Cdentata_DBH_small, Cpumila_DBH_small, main="scatterplot", las=1, xlim=c(0,
 plot(x=Cdentata_DBH_small, y=Cpumila_DBH_small, xlab=Castanea dentata, ylab=Castnea pumila, log=1)
 
 plot(x=Cdentata_DBH_small, y=Cpumila_DBH_small)
+
 #cannot get scatterplot or graph to work
 
+# Overall great job! Don't worry about the scatterplots for now. There is some variable "methods" in the data that has a bunch of NAs, so it's doing some weird things. The plotting tool is easier to use when you have cleaner data. Hopefully this assignment was fun, informative, and not too frustrating!
